@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
+    // novalidate 是取消浏览器校验
     <form action="/add_user/" method="post" novalidate>{% csrf_token %}
         <p>{{ obj.username }}{{ obj.errors.username.0 }}</p>
         <p>{{ obj.email }}{{ obj.errors.email.0 }}</p>
