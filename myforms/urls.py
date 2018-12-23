@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from app01 import views
-from app01 import views as v2
+from app02 import views as v2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', views.user),
     path('add_user/', views.add_user),
     re_path('edit_user-(\d+)/', views.edit_user),
-    re_path('test/', v2.test),
+    path('test/', v2.test),
 ]
