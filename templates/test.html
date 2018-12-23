@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    //  1、一个一个输出，推荐
+    {#    {{ obj.user }}#}
+    {#    {{ obj.age }}#}
+    {#    {{ obj.email }}#}
+    // 2、以p标签生成，自定义样式不好处理，不推荐
+    // 还有Obj.as_ul,obj.as_table
+    {{ obj.as_p }}
+</body>
+</html>
