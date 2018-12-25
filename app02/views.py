@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.forms import Form
 from django.forms import fields
 from django.forms import widgets
-
+from app01 import models
 
 class TestForm(Form):
     user = fields.CharField(
@@ -10,7 +10,7 @@ class TestForm(Form):
         max_length=12,
         min_length=3,
         error_messages={},  # 错误提示
-        # widget=widgets.Select(),    #定制生成html插件
+        widget=widgets.TextInput(attrs={'name':123}),    #定制生成html插件
         label='用户名',    # 前端的label {{obj.user.label}}
         initial='alex',     #初始值
         help_text='提示信息',    # 提示信息
@@ -66,11 +66,43 @@ class TestForm(Form):
         initial=[1,2],
     )
 
+    xdb = fields.ChoiceField(
+        widget=widgets.Select(choices=([
+            (1, '篮球'),
+            (2, '足球'),
+            (3, '乒乓球'),
+        ])),
+    )
 
+    # 多选
+    xdb1 = fields.MultipleChoiceField(
+        widget=widgets.SelectMultiple(attrs={'class': 'c1'}),
+        choices=[
+            (1, '篮球'),
+            (2, '足球'),
+            (3, '乒乓球'),
+        ],
+    )
 
+    # checkbox 单选
+    xbd2 = fields.CharField(
+        widget=widgets.CheckboxInput()
+    )
 
+    # checkbox 多选
+    xbd3 = fields.MultipleChoiceField(
+        initial=[2,],
+        choices=((1,'北京'),(2,'上海'),(3,'深圳')),
+        widget=widgets.CheckboxSelectMultiple()
+    )
 
+    # radio
+    xdb4 = fields.ChoiceField(
+        initial=2,
+        choices=((1, '北京'), (2, '上海'), (3, '深圳')),
+        widget=widgets.RadioSelect(),
 
+    )
 
 def test(request):
     if request.method == 'GET':
@@ -80,4 +112,30 @@ def test(request):
         obj = TestForm(request.POST, request.FILES)
         obj.is_valid()
         return render(request, 'test.html', {"obj": obj})
+from django.forms.models import ModelChoiceField
+class XqForm(Form):
+    price = fields.IntegerField()
+    user_id = fields.IntegerField(
+        widget=widgets.Select(
+            # values_list返回的是元组
+            # choices=models.UserInfo.objects.values_list('id', 'username'),
+        )
+    )
+
+    user_id2 = ModelChoiceField(
+        queryset=models.UserInfo.objects.all(),
+        to_field_name='username'
+    )
+
+    def __init__(self, *args, **kwargs):
+        # 实时更新，super会拷贝所有字段来赋值
+        super(XqForm, self).__init__(*args, **kwargs)
+        # 下面这行必须写在super下面
+        self.fields["user_id"].widget.choices = models.UserInfo.objects.values_list('id', 'username')
+
+
+def xq(request):
+    obj = XqForm()
+    return render(request, 'xq.html', {'obj':obj})
+
 

@@ -24,4 +24,5 @@ urlpatterns = [
     path('add_user/', views.add_user),
     re_path('edit_user-(\d+)/', views.edit_user),
     path('test/', v2.test),
+    path('xq/', v2.xq),
 ]
