@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse, redirect
 from django.forms import Form
 from django.forms import fields
 from django.forms import widgets
@@ -122,6 +122,7 @@ class XqForm(Form):
         )
     )
 
+    # 不推荐
     user_id2 = ModelChoiceField(
         queryset=models.UserInfo.objects.all(),
         to_field_name='username'
@@ -137,5 +138,35 @@ class XqForm(Form):
 def xq(request):
     obj = XqForm()
     return render(request, 'xq.html', {'obj':obj})
+
+class AjaxForm(Form):
+    price = fields.IntegerField()
+    user_id = fields.IntegerField(
+        widget=widgets.Select(choices=[(0,'alex'),(1,'root'),(2,'qwer')])
+    )
+
+import json
+def ajax(request):
+    if request.method == 'GET':
+        obj = AjaxForm()
+        return render(request, 'ajax.html', {'obj':obj})
+    else:
+        ret = {'status': '没钱','msg':None}
+        obj = AjaxForm(request.POST)
+        if obj.is_valid():
+            data = obj.cleaned_data
+            ret["status"] = '钱'
+            return HttpResponse(json.dumps(ret))
+        else:
+            ret['msg'] = obj.errors
+            # from django.forms.utils import ErrorDict
+            # print(obj.errors.as_json())
+            # print(obj.errors.as_ul())
+            # print(obj.errors.as_data())
+            return HttpResponse(json.dumps(ret))
+
+
+
+
 
 

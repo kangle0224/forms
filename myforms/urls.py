@@ -25,4 +25,5 @@ urlpatterns = [
     re_path('edit_user-(\d+)/', views.edit_user),
     path('test/', v2.test),
     path('xq/', v2.xq),
+    path('ajax/', v2.ajax),
 ]
