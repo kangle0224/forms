@@ -19,11 +19,11 @@
                     data: $('#fm').serialize(),
                     success:function (arg) {
                         // arg: 状态，错误信息
-                        console.log(arg);
-                        if(arg.static == '钱'){
+                        console.log(arg,123);
+                        if(arg.status == '钱'){
                             window.location.href = 'https://www.baidu.com';
                         }else{
-                            console.log();
+                            console.log(arg['msg']);
                         }
                     }
                 })

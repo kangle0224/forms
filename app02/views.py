@@ -139,7 +139,7 @@ def xq(request):
     obj = XqForm()
     return render(request, 'xq.html', {'obj':obj})
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 class AjaxForm(Form):
     username = fields.CharField()
     user_id = fields.IntegerField(
@@ -158,6 +158,15 @@ class AjaxForm(Form):
         # return self.cleaned_data['price']
         return v
 
+    def clean(self):
+        # 联合错误
+        valuedict = self.cleaned_data
+        v1 = valuedict.get('username')
+        v2 = valuedict.get('user_id')
+        if v1 == 'root' and v2 == 1:
+            raise ValidationError('整体错误信息')
+        return self.cleaned_data
+
 import json
 def ajax(request):
     if request.method == 'GET':
@@ -171,6 +180,13 @@ def ajax(request):
             ret["status"] = '钱'
             return HttpResponse(json.dumps(ret))
         else:
+            """
+            {
+                __all__: [], 整体错误信息,NON_FIELD_ERRORS就是这个错误
+                username: [], 个体错误信息
+                ...
+            }
+            """
             ret['msg'] = obj.errors
             # from django.forms.utils import ErrorDict
             # print(obj.errors.as_json())
