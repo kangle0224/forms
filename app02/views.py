@@ -139,11 +139,24 @@ def xq(request):
     obj = XqForm()
     return render(request, 'xq.html', {'obj':obj})
 
+from django.core.exceptions import ValidationError
 class AjaxForm(Form):
-    price = fields.IntegerField()
+    username = fields.CharField()
     user_id = fields.IntegerField(
         widget=widgets.Select(choices=[(0,'alex'),(1,'root'),(2,'qwer')])
     )
+
+    # 自定义方法 clean_字段名
+    # 必须有返回值 self.cleaned_data['username']
+    # 如果出错，raise ValidationError('fieldname')
+    def clean_username(self):
+        v = self.cleaned_data['username']
+        if models.UserInfo.objects.filter(username=v).count():
+            # 这里是看源码得到的
+            raise ValidationError('用户名已存在')
+
+        # return self.cleaned_data['price']
+        return v
 
 import json
 def ajax(request):
