@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 'app01.apps.App01Config',
     'app01',
     'app02',
+    'app03',
 ]
 
 MIDDLEWARE = [

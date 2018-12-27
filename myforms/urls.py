@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 from app01 import views
 from app02 import views as v2
+from app03 import views as v3
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +27,6 @@ urlpatterns = [
     path('test/', v2.test),
     path('xq/', v2.xq),
     path('ajax/', v2.ajax),
+    path('xuliehua/', v3.xuliehua),
+    path('get_data/', v3.get_data),
 ]
